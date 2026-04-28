@@ -1,12 +1,28 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
-    <h1>Bienvenue sur le site du projet ICC</h1>
-    <p>Ceci est l'espace d'accueil accessible à tous[cite: 23].</p>
+    <h1>Bienvenue sur notre plateforme</h1>
     
+    <section>
+        <h3>Description des services</h3>
+        <ul>
+            <li><strong>Visiteurs (UNM) :</strong> Consultation du Blog et de la liste des prix. [cite: 35, 48]</li>
+            <li><strong>Membres (UM) :</strong> Mini-Chat, ajout de commentaires, et achat de matériel. [cite: 28, 36, 46]</li>
+        </ul>
+    </section>
+
+    <hr>
+
     {% if not user.is_authenticated %}
-        <p>Vous êtes un visiteur (UNM). Veuillez vous inscrire pour accéder au chat et à la boutique[cite: 24, 31].</p>
+        <h3>Identification</h3>
+        <p>Veuillez entrer vos accès pour accéder aux services réservés :</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Se connecter</button>
+        </form>
     {% else %}
-        <p>Heureux de vous revoir, {{ user.username }} !</p>
+        <h3>Bonjour {{ user.username }} !</h3>
+        <p>Vous avez maintenant accès au Chat et à la Boutique.</p>
     {% endif %}
 {% endblock %}
