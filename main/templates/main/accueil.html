@@ -1,0 +1,12 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+    <h1>Bienvenue sur le site du projet ICC</h1>
+    <p>Ceci est l'espace d'accueil accessible à tous[cite: 23].</p>
+    
+    {% if not user.is_authenticated %}
+        <p>Vous êtes un visiteur (UNM). Veuillez vous inscrire pour accéder au chat et à la boutique[cite: 24, 31].</p>
+    {% else %}
+        <p>Heureux de vous revoir, {{ user.username }} !</p>
+    {% endif %}
+{% endblock %}

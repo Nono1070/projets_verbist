@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Projet ICC - Django</title>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'accueil' %}">Accueil</a> |
+        {% if user.is_authenticated %}
+            Bonjour {{ user.username }} ! | <a href="#">Déconnexion</a>
+        {% else %}
+            <a href="{% url 'inscription' %}">S'inscrire</a> | <a href="#">Connexion</a>
+        {% endif %}
+    </nav>
+    <hr>
+    
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
