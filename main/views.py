@@ -75,3 +75,23 @@ def connexion(request):
 def deconnexion(request):
     logout(request)
     return redirect('accueil')
+from .models import Article, Commentaire
+
+def liste_articles(request):
+    query = request.GET.get('search')
+    if query:
+        # Recherche par titre ou contenu
+        articles = Article.objects.filter(titre__icontains=query).order_by('-date_publication')
+    else:
+        articles = Article.objects.all().order_by('-date_publication')
+    return render(request, 'main/blog.html', {'articles': articles, 'query': query})
+
+def detail_article(request, article_id):
+    article = Article.objects.get(id=article_id)
+    if request.method == 'POST' and request.user.is_authenticated:
+        texte = request.POST.get('commentaire')
+        if texte:
+            Commentaire.objects.create(article=article, auteur=request.user, texte=texte)
+            return redirect('detail_article', article_id=article.id)
+    
+    return render(request, 'main/article_detail.html', {'article': article})
