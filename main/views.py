@@ -1,23 +1,15 @@
 from django.shortcuts import render, redirect
-from .forms import InscriptionForm
-from django.contrib.auth import login
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
 
-def inscription(request):
-    if request.method == 'POST':
-        form = InscriptionForm(request.POST, request.FILES) # request.FILES pour l'image/avatar [cite: 42]
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password']) # Cryptage du mot de passe 
-            user.save()
-            login(request, user) # Connecte l'utilisateur après inscription
-            return redirect('accueil')
-    else:
-        form = InscriptionForm()
-    return render(request, 'main/inscription.html', {'form': form})
+# Import de tes modèles et formulaires
+from .models import ChatMessage
+from .forms import InscriptionForm, ModifierProfilForm
 
+# 1. ACCUEIL : Accessible à tous
 def accueil(request):
-    # Si l'utilisateur remplit le formulaire de connexion sur l'accueil
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -26,9 +18,24 @@ def accueil(request):
             return redirect('accueil')
     else:
         form = AuthenticationForm()
-    
     return render(request, 'main/accueil.html', {'form': form})
-@login_required # Seul un membre connecté peut voir cette page
+
+# 2. INSCRIPTION : Pour devenir Membre (UM)
+def inscription(request):
+    if request.method == 'POST':
+        form = InscriptionForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password']) # Sécurité : Cryptage
+            user.save()
+            login(request, user)
+            return redirect('accueil')
+    else:
+        form = InscriptionForm()
+    return render(request, 'main/inscription.html', {'form': form})
+
+# 3. PROFIL : Modification des données par l'UM
+@login_required
 def profil(request):
     if request.method == 'POST':
         form = ModifierProfilForm(request.POST, request.FILES, instance=request.user)
@@ -39,3 +46,22 @@ def profil(request):
     else:
         form = ModifierProfilForm(instance=request.user)
     return render(request, 'main/profil.html', {'form': form})
+
+# 4. MINI-CHAT : Réservé aux UM authentifiés
+@login_required
+def mini_chat(request):
+    if request.method == 'POST':
+        texte = request.POST.get('message')
+        if texte:
+            # Limite de longueur et association à l'auteur
+            ChatMessage.objects.create(auteur=request.user, message=texte[:255])
+            return redirect('mini_chat')
+
+    # Récupération des 10 derniers messages
+    messages_chat = ChatMessage.objects.all().order_by('-date_envoi')[:10]
+    return render(request, 'main/mini_chat.html', {'messages_chat': messages_chat})
+
+# 5. DECONNEXION
+def deconnexion(request):
+    logout(request)
+    return redirect('accueil')

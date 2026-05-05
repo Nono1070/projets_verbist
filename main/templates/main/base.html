@@ -2,27 +2,52 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projet ICC - Django</title>
+    <style>
+        /* Petit style rapide pour que ce soit propre */
+        nav { background: #f4f4f4; padding: 10px; border-bottom: 1px solid #ccc; }
+        .avatar { vertical-align: middle; margin-right: 5px; border-radius: 50%; object-fit: cover; }
+        .container { padding: 20px; }
+    </style>
 </head>
 <body>
-   <nav>
-    <a href="{% url 'accueil' %}">Accueil</a> |
-    {% if user.is_authenticated %}
-        <!-- Affichage de l'avatar s'il existe -->
-        {% if user.avatar %}
-            <img src="{{ user.avatar.url }}" width="30" height="30" style="border-radius: 50%;">
-        {% endif %}
+    <nav>
+        <a href="{% url 'accueil' %}">Accueil</a> |
         
-        <a href="{% url 'profil' %}">Modifier profil</a> | 
-        <a href="{% url 'deconnexion' %}">Se déconnecter</a>
-    {% else %}
-        <a href="{% url 'inscription' %}">S'inscrire</a> | 
-        <a href="{% url 'connexion' %}">Se connecter</a>
-    {% endif %}
-</nav>
+        {% if user.is_authenticated %}
+            <!-- Section pour les Membres (UM) -->
+            {% if user.avatar %}
+                <img src="{{ user.avatar.url }}" width="30" height="30" class="avatar" alt="Avatar">
+            {% endif %}
+            
+            <strong>{{ user.username }}</strong> |
+            <a href="{% url 'mini_chat' %}">Mini-Chat</a> | 
+            <a href="{% url 'profil' %}">Modifier profil</a> | 
+            <a href="{% url 'deconnexion' %}">Se déconnecter</a>
+        {% else %}
+            <!-- Section pour les Visiteurs (UNM) -->
+            <a href="{% url 'inscription' %}">S'inscrire</a> | 
+            <a href="{% url 'connexion' %}">Se connecter</a>
+        {% endif %}
+    </nav>
+
+    <div class="container">
+        <!-- Les messages d'alerte (succès/erreur) -->
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color: green;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        <!-- Le contenu spécifique des autres pages s'affichera ici -->
+        {% endblock %}
+    </div>
+
     <hr>
-    
-    {% block content %}
-    {% endblock %}
+    <footer>
+        <p><small>&copy; 2026 - Projet de Fin de Module - Bachelier en Informatique de Gestion[cite: 1]</small></p>
+    </footer>
 </body>
 </html>
