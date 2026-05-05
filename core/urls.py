@@ -19,7 +19,7 @@ from django.urls import path
 from main import views
 
 urlpatterns = [
-    path('admin/', admin.site.手), # Espace réservé à l'admin [cite: 19]
+    path('admin/', admin.site.urls), # Espace réservé à l'admin [cite: 19]
     path('', views.accueil, name='accueil'),
     path('inscription/', views.inscription, name='inscription'),
 ]
