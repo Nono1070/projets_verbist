@@ -1,0 +1,11 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<h2>Modifier mon profil</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enregistrer les modifications</button>
+</form>
+<hr>
+<a href="{% url 'password_change' %}">Changer mon mot de passe</a> <!-- Django gère ça nativement -->
+{% endblock %}

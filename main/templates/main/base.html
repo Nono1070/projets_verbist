@@ -5,14 +5,21 @@
     <title>Projet ICC - Django</title>
 </head>
 <body>
-    <nav>
-        <a href="{% url 'accueil' %}">Accueil</a> |
-        {% if user.is_authenticated %}
-            Bonjour {{ user.username }} ! | <a href="#">Déconnexion</a>
-        {% else %}
-            <a href="{% url 'inscription' %}">S'inscrire</a> | <a href="#">Connexion</a>
+   <nav>
+    <a href="{% url 'accueil' %}">Accueil</a> |
+    {% if user.is_authenticated %}
+        <!-- Affichage de l'avatar s'il existe -->
+        {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" width="30" height="30" style="border-radius: 50%;">
         {% endif %}
-    </nav>
+        
+        <a href="{% url 'profil' %}">Modifier profil</a> | 
+        <a href="{% url 'deconnexion' %}">Se déconnecter</a>
+    {% else %}
+        <a href="{% url 'inscription' %}">S'inscrire</a> | 
+        <a href="{% url 'connexion' %}">Se connecter</a>
+    {% endif %}
+</nav>
     <hr>
     
     {% block content %}

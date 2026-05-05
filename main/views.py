@@ -28,3 +28,14 @@ def accueil(request):
         form = AuthenticationForm()
     
     return render(request, 'main/accueil.html', {'form': form})
+@login_required # Seul un membre connecté peut voir cette page
+def profil(request):
+    if request.method == 'POST':
+        form = ModifierProfilForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profil mis à jour !")
+            return redirect('profil')
+    else:
+        form = ModifierProfilForm(instance=request.user)
+    return render(request, 'main/profil.html', {'form': form})

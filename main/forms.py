@@ -15,3 +15,9 @@ class InscriptionForm(forms.ModelForm):
         if cleaned_data.get("password") != cleaned_data.get("confirm_password"):
             raise forms.ValidationError("Les mots de passe ne correspondent pas.")
         return cleaned_data
+    
+class ModifierProfilForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'adresse', 'code_postal', 'avatar']
+        
