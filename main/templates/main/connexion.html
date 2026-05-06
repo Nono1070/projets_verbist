@@ -3,15 +3,17 @@
 {% block content %}
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card shadow">
                 <div class="card-body">
-                    <h2 class="text-center mb-4">Créer un compte</h2>
-                    <form method="POST" enctype="multipart/form-data">
+                    <h2 class="text-center mb-4">Connexion</h2>
+                    <form method="POST">
                         {% csrf_token %}
                         {{ form.as_p }}
-                        <button type="submit" class="btn btn-success w-100">S'inscrire</button>
+                        <button type="submit" class="btn btn-primary w-100">Se connecter</button>
                     </form>
+                    <hr>
+                    <p class="text-center mb-0">Pas de compte ? <a href="{% url 'inscription' %}">S'inscrire</a></p>
                 </div>
             </div>
         </div>

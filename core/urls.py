@@ -5,24 +5,16 @@ from django.conf.urls.static import static
 from main import views
 
 urlpatterns = [
-    # Administration
     path('admin/', admin.site.urls), 
-    
-    # Accueil et Inscription
     path('', views.accueil, name='accueil'),
     path('inscription/', views.inscription, name='inscription'),
-    
-    # Authentification
     path('connexion/', views.connexion, name='connexion'),
     path('deconnexion/', views.deconnexion, name='deconnexion'),
-    
-    # Profil Membre (UM)
     path('profil/', views.profil, name='profil'),
-
-    # Mini-Chat (uniquement pour UM)
     path('chat/', views.mini_chat, name='mini_chat'),
+    path('blog/', views.liste_articles, name='liste_articles'),
+    path('blog/<int:article_id>/', views.detail_article, name='detail_article'),
 ]
 
-# Indispensable pour afficher les images/avatars
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

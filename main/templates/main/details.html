@@ -1,0 +1,25 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <a href="{% url 'liste_articles' %}" class="btn btn-link mb-3 text-decoration-none">← Retour aux articles</a>
+            
+            <h1>{{ article.titre }}</h1>
+            <p class="text-muted small">Publié le {{ article.date_publication|date:"d/m/Y à H:i" }}</p>
+            <hr>
+
+            {% if article.image %}
+                <img src="{{ article.image.url }}" class="img-fluid rounded mb-4 w-100" alt="{{ article.titre }}">
+            {% endif %}
+
+            <div class="article-content mb-5">
+                {{ article.contenu|linebreaks }}
+            </div>
+
+            <!-- On s'occupera de la section commentaires plus tard -->
+        </div>
+    </div>
+</div>
+{% endblock %}

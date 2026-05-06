@@ -1,0 +1,57 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Bouton Retour -->
+            <a href="{% url 'liste_articles' %}" class="btn btn-outline-secondary mb-4">
+                <i class="bi bi-arrow-left"></i> Retour aux actualités
+            </a>
+            
+            <article>
+                <h1 class="display-4 fw-bold">{{ article.titre }}</h1>
+                <p class="text-muted">Publié le {{ article.date_publication|date:"d F Y à H:i" }}</p>
+                <hr>
+
+                {% if article.image %}
+                    <img src="{{ article.image.url }}" class="img-fluid rounded shadow mb-4 w-100" alt="{{ article.titre }}">
+                {% endif %}
+
+                <div class="lead mb-5" style="white-space: pre-line;">
+                    {{ article.contenu }}
+                </div>
+            </article>
+
+            <hr>
+            <!-- Section Commentaires (on la remplira juste après) -->
+       <hr>
+<h4>Commentaires</h4>
+
+<!-- Formulaire pour ajouter un commentaire -->
+{% if user.is_authenticated %}
+    <form method="POST" class="mb-4">
+        {% csrf_token %}
+        <div class="mb-3">
+            <textarea name="contenu" class="form-control" rows="3" placeholder="Votre commentaire..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Publier</button>
+    </form>
+{% else %}
+    <p class="alert alert-warning">Vous devez être <a href="{% url 'connexion' %}">connecté</a> pour commenter.</p>
+{% endif %}
+<!-- Liste des commentaires -->
+<div class="mt-4">
+    {% for com in commentaires %}
+        <div class="card mb-2">
+            <div class="card-body py-2">
+                <strong>{{ com.auteur.username }}</strong> 
+                <small class="text-muted">- {{ com.date_publication|date:"d/m/Y H:i" }}</small>
+                <p class="mb-0 mt-1">{{ com.contenu }}</p>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted">Aucun commentaire pour l'instant. Soyez le premier !</p>
+    {% endfor %}
+</div>
+{% endblock %}

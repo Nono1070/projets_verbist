@@ -12,7 +12,7 @@ class User(AbstractUser):
 # 2. Modèle pour le Blog 
 class Billet(models.Model):
     titre = models.CharField(max_length=200)
-    contenu = models.TextField()
+    contenu = models.TextField(blank=True, default="")
     date_publication = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
