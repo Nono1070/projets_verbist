@@ -1,11 +1,41 @@
 {% extends 'main/base.html' %}
+
 {% block content %}
-<h2>Modifier mon profil</h2>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Enregistrer les modifications</button>
-</form>
-<hr>
-<a href="{% url 'password_change' %}">Changer mon mot de passe</a> <!-- Django gère ça nativement -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>Mon Profil</h3>
+                </div>
+                <div class="card-body text-center">
+                    <!-- Affichage de l'avatar actuel -->
+                    {% if user.avatar %}
+                        <img src="{{ user.avatar.url }}" class="rounded-circle mb-3 shadow-sm" style="width: 150px; height: 150px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-secondary rounded-circle d-inline-block mb-3" style="width: 150px; height: 150px;"></div>
+                    {% endif %}
+                    
+                    <h4>{{ user.username }}</h4>
+                    <p class="text-muted">{{ user.email }}</p>
+                    <hr>
+                    
+                    <!-- FORMULAIRE ICI -->
+                    <!-- Note le enctype="multipart/form-data" obligatoire pour l'avatar -->
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="text-start">
+                            {{ form.as_p }}
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 mt-3">
+                            <i class="bi bi-check-circle"></i> Sauvegarder les modifications
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
