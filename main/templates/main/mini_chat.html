@@ -1,24 +1,46 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
-<h2>Espace Mini-Chat</h2>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Mini-Chat Communautaire</h5>
+                </div>
+                
+                <!-- Zone des messages -->
+                <div class="card-body" style="height: 400px; overflow-y: auto; background-color: #f8f9fa;">
+                    {% for msg in messages_chat %}
+                        <div class="mb-3 {% if msg.auteur == user %}text-end{% endif %}">
+                            <div class="d-inline-block p-2 rounded shadow-sm 
+                                {% if msg.auteur == user %}bg-primary text-white{% else %}bg-white{% endif %}" 
+                                style="max-width: 80%;">
+                                
+                                <small class="d-block fw-bold" style="font-size: 0.7rem;">
+                                    {{ msg.auteur.username }}
+                                </small>
+                                <span>{{ msg.message }}</span>
+                                <small class="d-block mt-1 opacity-75" style="font-size: 0.6rem;">
+                                    {{ msg.date_envoi|date:"H:i" }}
+                                </small>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-center text-muted">Aucun message. Lancez la discussion !</p>
+                    {% endfor %}
+                </div>
 
-<div style="border: 1px solid #ccc; padding: 15px; border-radius: 8px; background: #f9f9f9; max-height: 400px; overflow-y: auto;">
-    {% for msg in messages_chat %}
-        <p><strong>{{ msg.auteur.username }}</strong> : {{ msg.message }} 
-           <small style="color: #888;">({{ msg.date_envoi|date:"H:i" }})</small></p>
-    {% empty %}
-        <p>Aucun message pour le moment. Soyez le premier à écrire !</p>
-    {% endfor %}
+                <!-- Formulaire d'envoi -->
+                <div class="card-footer">
+                    <form method="POST" class="d-flex">
+                        {% csrf_token %}
+                        <input type="text" name="message" class="form-control me-2" placeholder="Votre message..." required maxlength="255">
+                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<br>
-
-<form method="post">
-    {% csrf_token %}
-    <input type="text" name="message" placeholder="Votre message..." required maxlength="255" style="width: 80%; padding: 8px;">
-    <button type="submit" style="padding: 8px 15px;">Envoyer</button>
-</form>
-
-<p><small>Note : Seuls les membres connectés peuvent participer.</small></p>
 {% endblock %}
